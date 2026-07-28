@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vision Academy | فيجن أكاديمي</title>
+
+    <!-- Google Font: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ----- Custom overrides & hand-crafted touches ----- */
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #0F172A;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2563EB;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1D4ED8;
+        }
+
+        /* Navy backdrop with subtle texture overlay */
+        .navy-bg {
+            background-color: #0F172A;
+            position: relative;
+        }
+        .navy-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Hero decorative glow */
+        .hero-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            top: -100px;
+            right: -100px;
+        }
+        .hero-glow-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        /* Card hover effects */
+        .instructor-card {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+        .instructor-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.20), 0 0 0 1px rgba(37, 99, 235, 0.10);
+        }
+
+        /* Form input focus ring (custom) */
+        .form-input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Button primary */
+        .btn-primary {
+            background: #2563EB;
+            color: #FFFFFF;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(37, 99, 235, 0.40);
+        }
+        .btn-primary:active {
+            transform: translateY(0px);
+        }
+
+        /* Nav link underline animation */
+        .nav-link {
+            position: relative;
+            color: rgba(255, 255, 255, 0.75);
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: #2563EB;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FFFFFF;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile nav overlay */
+        .mobile-nav-open {
+            max-height: 400px;
+            opacity: 1;
+            visibility: visible;
+            transition: max-height 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-nav-closed {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: max-height 0.35s ease, opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        /* Center field slide */
+        .center-field-enter {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease, margin 0.3s ease;
+            margin-top: 0;
+        }
+        .center-field-enter.active {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        /* Floating accent badge */
+        .accent-badge {
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563EB;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.25rem;
+                line-height: 1.2;
+            }
+            .hero-sub {
+                font-size: 1rem;
+            }
+        }
+
+        /* Selection color */
+        ::selection {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        /* Smooth fade-in on load */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .fade-in-section:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        .fade-in-section:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Subtle pulse on CTA */
+        @keyframes softPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.25);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(37, 99, 235, 0);
+            }
+        }
+        .pulse-ring {
+            animation: softPulse 2.4s ease-in-out infinite;
+        }
+
+        /* Instructor avatar placeholder styling */
+        .avatar-placeholder {
+            background: linear-gradient(135deg, #E2E8F0 0%, #F1F5F9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748B;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Form card inner shadow */
+        .form-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        /* Label style */
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1E293B;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .form-label .required {
+            color: #EF4444;
+            margin-right: 2px;
+        }
+
+        /* Toast / notification */
+        .toast-message {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.30);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.95rem;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast-message.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-message.error {
+            background: #B91C1C;
+        }
+        .toast-message.success {
+            background: #065F46;
+        }
+
+        /* Card divider */
+        .card-divider {
+            height: 3px;
+            width: 48px;
+            background: #2563EB;
+            border-radius: 999px;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        /* Responsive container padding */
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+        @media (min-width: 640px) {
+            .container-custom {
+                padding: 0 2rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .container-custom {
+                padding: 0 3rem;
+            }
+        }
+
+        /* Special decorative line */
+        .deco-line {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #2563EB, #60A5FA);
+            border-radius: 999px;
+            margin: 0.5rem 0 1.25rem 0;
+        }
+
+        /* Make selects consistent */
+        select.form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2347566B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+            padding-left: 40px;
+        }
+
+        /* Instructor card icon ring */
+        .icon-ring {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563EB;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .instructor-card:hover .icon-ring {
+            background: #2563EB;
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* Footer links */
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.2s ease;
+        }
+        .footer-link:hover {
+            color: #FFFFFF;
+        }
+
+        /* Staggered animation for cards */
+        .stagger-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cardStagger 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .stagger-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .stagger-card:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes cardStagger {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile nav hamburger active state */
+        .hamburger-active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger-active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: white;
+            border-radius: 999px;
+            transition: all 0.3s ease;
+        }
+        .hamburger span:not(:last-child) {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- TOAST NOTIFICATION                                            -->
+    <!-- ============================================================ -->
+    <div id="toast" class="toast-message"></div>
+
+    <!-- ============================================================ -->
+    <!-- HEADER / NAVBAR                                               -->
+    <!-- ============================================================ -->
+    <header class="navy-bg fixed top-0 left-0 right-0 z-50 border-b border-white/5" style="background-color:#0F172A;">
+        <div class="container-custom flex items-center justify-between h-16 md:h-20">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-[#2563EB] flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-graduation-cap text-base md:text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-white font-extrabold text-sm md:text-base tracking-tight">VISION ACADEMY</span>
+                    <span class="block text-[10px] md:text-[11px] text-blue-400/80 font-medium tracking-wider">فيجن أكاديمي</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav (hidden on mobile) -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#hero" class="nav-link">الرئيسية</a>
+                <a href="#instructors" class="nav-link">المحاضرين</a>
+                <a href="#booking" class="nav-link">أماكن الشرح</a>
+                <a href="#booking" class="nav-link bg-[#2563EB] px-5 py-2 rounded-full text-white hover:bg-[#1D4ED8] transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 text-sm font-bold">
+                    احجز الآن
+                </a>
+            </nav>
+
+            <!-- Mobile Hamburger -->
+            <button id="hamburgerBtn" class="md:hidden flex flex-col items-center justify-center w-10 h-10 rounded-lg hover:bg-white/5 transition-colors hamburger" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Dropdown -->
+        <div id="mobileNav" class="md:hidden overflow-hidden mobile-nav-closed bg-[#0F172A] border-t border-white/5">
+            <div class="container-custom py-5 flex flex-col gap-4 text-sm font-medium">
+                <a href="#hero" class="text-white/80 hover:text-white transition-colors py-2 border-b border-white/5">الرئيسية</a>
+                <a href="#instructors" class="text-white/80 hover:text-white transition-colors py-2 border-b border-white/5">المحاضرين</a>
+                <a href="#booking" class="text-white/80 hover:text-white transition-colors py-2 border-b border-white/5">أماكن الشرح</a>
+                <a href="#booking" class="bg-[#2563EB] text-center py-3 rounded-full text-white font-bold hover:bg-[#1D4ED8] transition-all shadow-lg shadow-blue-500/20 mt-1">
+                    احجز الآن
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- HERO SECTION                                                  -->
+    <!-- ============================================================ -->
+    <section id="hero" class="navy-bg min-h-screen flex items-center relative overflow-hidden pt-16 md:pt-20" style="background-color:#0F172A;">
+        <!-- Decorative glows -->
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
+
+        <div class="container-custom relative z-10 py-12 md:py-20">
+            <div class="max-w-3xl">
+
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 accent-badge rounded-full px-4 py-1.5 text-xs font-semibold mb-6">
+                    <i class="fas fa-calendar-check text-[#2563EB]"></i>
+                    <span>التسجيل مفتوح الآن — 2026 / 2027</span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="hero-title text-white font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.15] tracking-tight">
+                    معاً نصنع مستقبلك
+                    <span class="text-[#2563EB] block md:inline">في عالم البرمجة</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="hero-sub text-white/70 text-base md:text-lg lg:text-xl mt-5 leading-relaxed max-w-2xl">
+                    فتح باب الحجز للعام الدراسي 2026 / 2027 — للثانوية العامة والأزهرية
+                </p>
+
+                <!-- CTA -->
+                <div class="mt-8 md:mt-10 flex flex-wrap items-center gap-4">
+                    <a href="#booking" class="btn-primary px-8 py-3.5 rounded-full text-base font-bold shadow-lg shadow-blue-500/30 pulse-ring inline-flex items-center gap-2.5">
+                        <i class="fas fa-pen-fancy"></i>
+                        احجز مكانك الآن
+                    </a>
+                    <a href="#instructors" class="text-white/70 hover:text-white transition-colors text-sm font-medium flex items-center gap-2">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                        تعرف على المحاضرين
+                    </a>
+                </div>
+
+                <!-- Trust indicator -->
+                <div class="flex items-center gap-6 mt-10 pt-6 border-t border-white/5 text-white/40 text-xs">
+                    <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-[#2563EB]"></i> تدريب احترافي</span>
+                    <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-[#2563EB]"></i> منهج محدث</span>
+                    <span class="flex items-center gap-1.5"><i class="fas fa-check-circle text-[#2563EB]"></i> دعم مستمر</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative bottom wave -->
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#F8FAFC] to-transparent opacity-20 pointer-events-none"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- INSTRUCTORS SECTION                                           -->
+    <!-- ============================================================ -->
+    <section id="instructors" class="py-16 md:py-24" style="background-color:#F8FAFC;">
+        <div class="container-custom">
+
+            <!-- Section header -->
+            <div class="text-center max-w-2xl mx-auto mb-12 md:mb-16 fade-in-section">
+                <span class="text-[#2563EB] font-bold text-sm tracking-widest uppercase">فريق التدريس</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[#0F172A] mt-2">المحاضرين</h2>
+                <div class="deco-line mx-auto"></div>
+                <p class="text-[#475569] text-base md:text-lg mt-3">
+                    نخبة من المهندسين المتخصصين في مجالات البرمجة والذكاء الاصطناعي
+                </p>
+            </div>
+
+            <!-- Cards grid -->
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+
+                <!-- Card 1: Ahmed Moataz -->
+                <div class="instructor-card rounded-2xl p-6 md:p-8 stagger-card">
+                    <div class="flex items-start gap-5">
+                        <div class="icon-ring">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl md:text-2xl font-extrabold text-[#0F172A]">المهندس / أحمد معتز بخيت</h3>
+                            <div class="card-divider"></div>
+                            <p class="text-[#475569] text-sm md:text-base leading-relaxed">
+                                <span class="font-semibold text-[#0F172A]">هندسة الزقازيق</span> — قسم حاسبات
+                            </p>
+                            <div class="flex flex-wrap items-center gap-3 mt-3 text-xs text-[#64748B]">
+                                <span class="flex items-center gap-1.5"><i class="fas fa-code text-[#2563EB]"></i> برمجة</span>
+                                <span class="flex items-center gap-1.5"><i class="fas fa-database text-[#2563EB]"></i> قواعد بيانات</span>
+                                <span class="flex items-center gap-1.5"><i class="fas fa-laptop text-[#2563EB]"></i> 8+ سنوات خبرة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Hassan Al-Omda -->
+                <div class="instructor-card rounded-2xl p-6 md:p-8 stagger-card">
+                    <div class="flex items-start gap-5">
+                        <div class="icon-ring">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl md:text-2xl font-extrabold text-[#0F172A]">المهندس / حسن العمدة</h3>
+                            <div class="card-divider"></div>
+                            <p class="text-[#475569] text-sm md:text-base leading-relaxed">
+                                <span class="font-semibold text-[#0F172A]">حاسبات ومعلومات الزقازيق</span> — قسم ذكاء اصطناعي
+                            </p>
+                            <div class="flex flex-wrap items-center gap-3 mt-3 text-xs text-[#64748B]">
+                                <span class="flex items-center gap-1.5"><i class="fas fa-brain text-[#2563EB]"></i> ذكاء اصطناعي</span>
+                                <span class="flex items-center gap-1.5"><i class="fas fa-chart-line text-[#2563EB]"></i> تعلم آلي</span>
+                                <span class="flex items-center gap-1.5"><i class="fas fa-microchip text-[#2563EB]"></i> 6+ سنوات خبرة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Extra note -->
+            <div class="text-center mt-10 text-sm text-[#64748B] fade-in-section">
+                <i class="fas fa-arrow-left text-[#2563EB] ml-1"></i>
+                اختر المحاضر المناسب لك واستفد من خبراته المتميزة
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- BOOKING / REGISTRATION FORM                                   -->
+    <!-- ============================================================ -->
+    <section id="booking" class="py-16 md:py-24" style="background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);">
+        <div class="container-custom">
+
+            <!-- Section header -->
+            <div class="text-center max-w-2xl mx-auto mb-10 md:mb-14 fade-in-section">
+                <span class="text-[#2563EB] font-bold text-sm tracking-widest uppercase">احجز الآن</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[#0F172A] mt-2">استمارة الحجز الشهرية</h2>
+                <div class="deco-line mx-auto"></div>
+                <p class="text-[#475569] text-base md:text-lg mt-3">
+                    املأ البيانات التالية وسيتم التواصل معك لتأكيد الحجز
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="form-card max-w-2xl mx-auto rounded-2xl p-6 md:p-10 shadow-xl shadow-[#0F172A]/5 fade-in-section" style="background:#FFFFFF;">
+
+                <form id="bookingForm" novalidate>
+
+                    <!-- 1. Full Name -->
+                    <div class="mb-5">
+                        <label for="fullName" class="form-label">
+                            <span class="required">*</span> الاسم رباعي
+                        </label>
+                        <input type="text" id="fullName" name="fullName" required
+                        class="form-input w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all placeholder:text-[#94A3B8]"
+                        placeholder="مثال: أحمد محمد عبدالله حسن" />
+                    </div>
+
+                    <!-- 2. Student Phone -->
+                    <div class="mb-5">
+                        <label for="studentPhone" class="form-label">
+                            <span class="required">*</span> رقم هاتف الطالب
+                        </label>
+                        <input type="tel" id="studentPhone" name="studentPhone" required
+                        class="form-input w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all placeholder:text-[#94A3B8]"
+                        placeholder="مثال: 01012345678" />
+                    </div>
+
+                    <!-- 3. Parent Phone -->
+                    <div class="mb-5">
+                        <label for="parentPhone" class="form-label">
+                            <span class="required">*</span> رقم هاتف ولي الأمر
+                        </label>
+                        <input type="tel" id="parentPhone" name="parentPhone" required
+                        class="form-input w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all placeholder:text-[#94A3B8]"
+                        placeholder="مثال: 01012345678" />
+                    </div>
+
+                    <!-- 4. Grade -->
+                    <div class="mb-5">
+                        <label for="grade" class="form-label">
+                            <span class="required">*</span> الصف الدراسي
+                        </label>
+                        <select id="grade" name="grade" required
+                        class="form-select w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all cursor-pointer">
+                        <option value="" disabled selected>اختر الصف الدراسي</option>
+                        <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                        <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                        <option value="الصف الثالث الثانوي - عام">الصف الثالث الثانوي - عام</option>
+                        <option value="الصف الثالث الثانوي - أزهري">الصف الثالث الثانوي - أزهري</option>
+                    </select>
+                </div>
+
+                <!-- 5. Study Mode -->
+                <div class="mb-5">
+                    <label for="studyMode" class="form-label">
+                        <span class="required">*</span> نظام الدراسة
+                    </label>
+                    <select id="studyMode" name="studyMode" required
+                    class="form-select w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all cursor-pointer">
+                    <option value="" disabled selected>اختر نظام الدراسة</option>
+                    <option value="أونلاين">أونلاين</option>
+                    <option value="أوفلاين - سنتر">أوفلاين - سنتر</option>
+                </select>
+            </div>
+
+            <!-- 6. Center (dynamically shown) -->
+            <div id="centerFieldWrapper" class="center-field-enter">
+                <label for="center" class="form-label">
+                    <span class="required">*</span> السنتر / المكان
+                </label>
+                <select id="center" name="center"
+                class="form-select w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all cursor-pointer">
+                <option value="" disabled selected>اختر السنتر</option>
+                <option value="سنتر الصوة">سنتر الصوة</option>
+                <option value="سنتر أبو حماد">سنتر أبو حماد</option>
+            </select>
+        </div>
+
+        <!-- 7. Instructor -->
+        <div class="mb-6">
+            <label for="instructor" class="form-label">
+                <span class="required">*</span> المستر المراد الحجز معه
+            </label>
+            <select id="instructor" name="instructor" required
+            class="form-select w-full px-4 py-3 rounded-xl border border-[#E2E8F0] bg-[#FAFBFC] text-[#0F172A] text-base transition-all cursor-pointer">
+            <option value="" disabled selected>اختر المستر</option>
+            <option value="أحمد معتز بخيت">م. أحمد معتز بخيت</option>
+            <option value="حسن العمدة">م. حسن العمدة</option>
+        </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" id="submitBtn"
+    class="btn-primary w-full py-4 rounded-xl text-base md:text-lg font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center justify-center gap-3 transition-all">
+    <i class="fas fa-paper-plane"></i>
+    إرسال طلب الحجز
+</button>
+
+<!-- Footer note -->
+<p class="text-center text-xs text-[#94A3B8] mt-4">
+    <i class="fas fa-lock text-[#2563EB] ml-1"></i>
+    سيتم توجيهك إلى واتساب لتأكيد الحجز
+</p>
+
+</form>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FOOTER                                                        -->
+<!-- ============================================================ -->
+<footer class="navy-bg pt-12 pb-6 border-t border-white/5" style="background-color:#0F172A;">
+    <div class="container-custom">
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+
+            <!-- Brand -->
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-[#2563EB] flex items-center justify-center text-white text-sm font-bold">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <span class="text-white font-extrabold text-base">VISION ACADEMY</span>
+                    <span class="block text-[10px] text-blue-400/70 font-medium">فيجن أكاديمي</span>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="flex flex-wrap items-center gap-6 text-sm">
+                <a href="#hero" class="footer-link">الرئيسية</a>
+                <a href="#instructors" class="footer-link">المحاضرين</a>
+                <a href="#booking" class="footer-link">احجز الآن</a>
+                <a href="#" class="footer-link text-[#2563EB] font-semibold">واتساب</a>
+            </div>
+
+            <!-- Social -->
+            <div class="flex items-center gap-3">
+                <a href="#" class="text-white/30 hover:text-white transition-colors text-sm"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white/30 hover:text-white transition-colors text-sm"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white/30 hover:text-white transition-colors text-sm"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="text-white/30 hover:text-white transition-colors text-sm"><i class="fab fa-tiktok"></i></a>
+            </div>
+
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-white/5 my-6"></div>
+
+        <!-- Copyright -->
+        <div class="text-center text-[10px] md:text-xs text-white/30">
+            &copy; 2026 <span class="text-white/50">Vision Academy</span> — فيجن أكاديمي. جميع الحقوق محفوظة.
+        </div>
+
+    </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT — Vanilla                                          -->
+<!-- ============================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ---- DOM refs ----
+        const form = document.getElementById('bookingForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const toast = document.getElementById('toast');
+
+        const fullName = document.getElementById('fullName');
+        const studentPhone = document.getElementById('studentPhone');
+        const parentPhone = document.getElementById('parentPhone');
+        const grade = document.getElementById('grade');
+        const studyMode = document.getElementById('studyMode');
+        const center = document.getElementById('center');
+        const instructor = document.getElementById('instructor');
+        const centerWrapper = document.getElementById('centerFieldWrapper');
+
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileNav = document.getElementById('mobileNav');
+
+        // ---- Phone numbers mapping ----
+        const INSTRUCTOR_PHONES = {
+            'أحمد معتز بخيت': '201005344135',
+            'حسن العمدة': '201127701381'
+        };
+
+        // ---- Toast helper ----
+        let toastTimer = null;
+
+        function showToast(message, type) {
+            if (toastTimer) {
+                clearTimeout(toastTimer);
+                toastTimer = null;
+            }
+            toast.textContent = message;
+            toast.className = 'toast-message';
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'success') toast.classList.add('success');
+            // force reflow
+            void toast.offsetWidth;
+            toast.classList.add('show');
+
+            toastTimer = setTimeout(function() {
+                toast.classList.remove('show');
+                toastTimer = null;
+            }, 4000);
+        }
+
+        // ---- Mobile nav toggle ----
+        hamburgerBtn.addEventListener('click', function() {
+            const isOpen = mobileNav.classList.contains('mobile-nav-open');
+            if (isOpen) {
+                mobileNav.classList.remove('mobile-nav-open');
+                mobileNav.classList.add('mobile-nav-closed');
+                hamburgerBtn.classList.remove('hamburger-active');
+            } else {
+                mobileNav.classList.remove('mobile-nav-closed');
+                mobileNav.classList.add('mobile-nav-open');
+                hamburgerBtn.classList.add('hamburger-active');
+            }
+        });
+
+        // Close mobile nav on link click
+        mobileNav.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('mobile-nav-open');
+                mobileNav.classList.add('mobile-nav-closed');
+                hamburgerBtn.classList.remove('hamburger-active');
+            });
+        });
+
+        // ---- Dynamic center field ----
+        function toggleCenterField() {
+            const mode = studyMode.value;
+            if (mode === 'أوفلاين - سنتر') {
+                centerWrapper.classList.add('active');
+                center.setAttribute('required', 'required');
+            } else {
+                centerWrapper.classList.remove('active');
+                center.removeAttribute('required');
+                center.value = '';
+            }
+        }
+
+        studyMode.addEventListener('change', toggleCenterField);
+
+        // ---- Form submission ----
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 1. Validate all required fields (HTML5 will catch most)
+            // But we need to manually check center if visible
+            const isCenterVisible = centerWrapper.classList.contains('active');
+
+            // Quick check for empty required fields
+            const requiredFields = form.querySelectorAll('[required]');
+            let allValid = true;
+            let firstInvalid = null;
+
+            requiredFields.forEach(function(field) {
+                if (!field.value || field.value.trim() === '') {
+                    allValid = false;
+                    if (!firstInvalid) firstInvalid = field;
+                    field.style.borderColor = '#EF4444';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            // Special: if center is visible and required but empty
+            if (isCenterVisible && (!center.value || center.value === '')) {
+                allValid = false;
+                if (!firstInvalid) firstInvalid = center;
+                center.style.borderColor = '#EF4444';
+            }
+
+            if (!allValid) {
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                    showToast('❌ يرجى ملء جميع الحقول المطلوبة', 'error');
+                } else {
+                    showToast('❌ يرجى ملء جميع البيانات', 'error');
+                }
+                return;
+            }
+
+            // 2. Gather data
+            const nameVal = fullName.value.trim();
+            const studentPhoneVal = studentPhone.value.trim();
+            const parentPhoneVal = parentPhone.value.trim();
+            const gradeVal = grade.value;
+            const modeVal = studyMode.value;
+            const centerVal = isCenterVisible ? center.value : '';
+            const instructorVal = instructor.value;
+
+            // 3. Build WhatsApp message
+            let modeDisplay = modeVal;
+            if (isCenterVisible && centerVal) {
+                modeDisplay = modeVal + ' (' + centerVal + ')';
+            }
+
+            const msgLines = [
+                'السلام عليكم، أرغب في الحجز بـ Vision Academy 🎓',
+                '----',
+                '👤 **اسم الطالب**: ' + nameVal,
+                '📱 **رقم الطالب**: ' + studentPhoneVal,
+                '📞 **رقم ولي الأمر**: ' + parentPhoneVal,
+                '📚 **الصف الدراسي**: ' + gradeVal,
+                '🌐 **نظام الدراسة**: ' + modeDisplay,
+                '----',
+                'يرجى تأكيد الحجز وموافياتي بالتفاصيل.'
+            ];
+
+            const fullMessage = msgLines.join('\n');
+
+            // 4. Determine target phone
+            const phoneKey = instructorVal;
+            let targetPhone = INSTRUCTOR_PHONES[phoneKey];
+
+            if (!targetPhone) {
+                showToast('❌ لم يتم تحديد المحاضر بشكل صحيح', 'error');
+                return;
+            }
+
+            // 5. Encode and redirect
+            const encoded = encodeURIComponent(fullMessage);
+            const waUrl = 'https://wa.me/' + targetPhone + '?text=' + encoded;
+
+            // Show a quick success toast before redirect
+            showToast('✅ جاري التوجيه إلى واتساب...', 'success');
+
+            // Small delay so toast is visible
+            setTimeout(function() {
+                window.open(waUrl, '_blank');
+                // Optionally reset form after a moment
+                setTimeout(function() {
+                    // Don't reset aggressively, user might want to keep data
+                }, 500);
+            }, 600);
+        });
+
+        // ---- Reset border styles on input ----
+        form.querySelectorAll('input, select').forEach(function(el) {
+            el.addEventListener('input', function() {
+                this.style.borderColor = '';
+            });
+            el.addEventListener('change', function() {
+                this.style.borderColor = '';
+            });
+        });
+
+        // ---- Init: center field state on page load ----
+        // (if studyMode has a default value, toggle accordingly)
+        if (studyMode.value) {
+            toggleCenterField();
+        }
+
+        // ---- Smooth anchor scroll (with offset for fixed header) ----
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPos = targetEl.getBoundingClientRect().top + window.pageYOffset -
+                        headerHeight - 12;
+                    window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ---- Extra: if user clicks on "احجز الآن" from mobile, close nav ----
+        // already handled above
+
+        console.log('✅ Vision Academy — ready.');
+    })();
+</script>
+
+</body>
+                                                                   </html>
